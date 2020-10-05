@@ -1,5 +1,6 @@
 package com.regina.myflexiblefragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_detail_category.*
 
 class DetailCategoryFragment : Fragment(), View.OnClickListener {
@@ -30,12 +32,12 @@ class DetailCategoryFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tvCategoryName = view.findViewById(R.id.tv_category_name)
-        tvCategoryDescription = view.findViewById(R.id.tv_category_description)
-        btnProfile = view.findViewById(R.id.btn_profile)
-        btnProfile.setOnClickListener(this)
-        btnShowDialog = view.findViewById(R.id.btn_show_dialog)
-        btnShowDialog.setOnClickListener(this)
+        tvCategoryName = view.findViewById(R.id.tv_category_name);
+        tvCategoryDescription = view.findViewById(R.id.tv_category_description);
+        btnProfile = view.findViewById(R.id.btn_profile);
+        btnProfile.setOnClickListener(this);
+        btnShowDialog = view.findViewById(R.id.btn_show_dialog);
+        btnShowDialog.setOnClickListener(this);
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -53,15 +55,32 @@ class DetailCategoryFragment : Fragment(), View.OnClickListener {
         }
     }
 
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString(EXTRA_DESCRIPTION, description)
+    }
+
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btn_profile -> {
-
+                val mIntent = Intent(activity, ProfileActivity::class.java)
+                startActivity(mIntent)
             }
 
             R.id.btn_show_dialog -> {
+                val mOptionDialogFragment = OptionDialogFragment()
 
+                val mFragmentManager = childFragmentManager
+                mOptionDialogFragment.show(mFragmentManager, OptionDialogFragment::class.java.simpleName)
             }
+        }
+    }
+
+    internal var optionDialogListener: OptionDialogFragment.OnOptionDialogListener = object : OptionDialogFragment.OnOptionDialogListener {
+        override fun onOptionChosen(text: String?) {
+            Toast.makeText(activity, text, Toast.LENGTH_SHORT).show()
         }
     }
 }
